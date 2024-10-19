@@ -4224,7 +4224,7 @@ static int longUnitTests(U32 const seed, double compressibility)
     DISPLAYLEVEL(3, "longtest%3i : table cleanliness through index reduction : ", testNb++);
     {   int cLevel;
         size_t approxIndex = 0;
-        size_t maxIndex = ((3U << 29) + (1U << ZSTD_WINDOWLOG_MAX)); /* ZSTD_CURRENT_MAX from zstd_compress_internal.h */
+        size_t maxIndex = ((3U << 29) + (1LLU << ZSTD_WINDOWLOG_MAX)); /* ZSTD_CURRENT_MAX from zstd_compress_internal.h */
 
         /* Provision enough space in a static context so that we can do all
          * this without ever reallocating, which would reset the indices. */

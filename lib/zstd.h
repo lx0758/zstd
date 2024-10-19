@@ -1233,7 +1233,7 @@ ZSTDLIB_API size_t ZSTD_sizeof_DDict(const ZSTD_DDict* ddict);
 
 /* compression parameter bounds */
 #define ZSTD_WINDOWLOG_MAX_32    30
-#define ZSTD_WINDOWLOG_MAX_64    31
+#define ZSTD_WINDOWLOG_MAX_64    36
 #define ZSTD_WINDOWLOG_MAX     ((int)(sizeof(size_t) == 4 ? ZSTD_WINDOWLOG_MAX_32 : ZSTD_WINDOWLOG_MAX_64))
 #define ZSTD_WINDOWLOG_MIN       10
 #define ZSTD_HASHLOG_MAX       ((ZSTD_WINDOWLOG_MAX < 30) ? ZSTD_WINDOWLOG_MAX : 30)

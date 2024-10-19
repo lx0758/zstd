@@ -2054,7 +2054,7 @@ static size_t ZSTD_maxShortOffset(void)
         /* We can decode any offset without reloading bits.
          * This might change if the max window size grows.
          */
-        ZSTD_STATIC_ASSERT(ZSTD_WINDOWLOG_MAX <= 31);
+        ZSTD_STATIC_ASSERT(ZSTD_WINDOWLOG_MAX <= 63);
         return (size_t)-1;
     } else {
         /* The maximum offBase is (1 << (STREAM_ACCUMULATOR_MIN + 1)) - 1.

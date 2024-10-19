@@ -83,7 +83,7 @@ void FIO_setLdmFlag(FIO_prefs_t* const prefs, unsigned ldmFlag);
 void FIO_setLdmHashRateLog(FIO_prefs_t* const prefs, int ldmHashRateLog);
 void FIO_setLdmHashLog(FIO_prefs_t* const prefs, int ldmHashLog);
 void FIO_setLdmMinMatch(FIO_prefs_t* const prefs, int ldmMinMatch);
-void FIO_setMemLimit(FIO_prefs_t* const prefs, unsigned memLimit);
+void FIO_setMemLimit(FIO_prefs_t* const prefs, unsigned long long memLimit);
 void FIO_setNbWorkers(FIO_prefs_t* const prefs, int nbWorkers);
 void FIO_setOverlapLog(FIO_prefs_t* const prefs, int overlapLog);
 void FIO_setRemoveSrcFile(FIO_prefs_t* const prefs, int flag);

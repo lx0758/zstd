@@ -82,7 +82,7 @@ static const char*    g_defaultDictName = "dictionary";
 static const unsigned g_defaultMaxDictSize = 110 KB;
 static const int      g_defaultDictCLevel = 3;
 static const unsigned g_defaultSelectivityLevel = 9;
-static const unsigned g_defaultMaxWindowLog = 27;
+static const unsigned g_defaultMaxWindowLog = ZSTD_WINDOWLOG_MAX;
 #define OVERLAP_LOG_DEFAULT 9999
 #define LDM_PARAM_DEFAULT 9999  /* Default for parameters where 0 is valid */
 static U32 g_overlapLog = OVERLAP_LOG_DEFAULT;
@@ -868,7 +868,7 @@ int main(int argCount, const char* argv[])
     int cLevel = init_cLevel();
     int cLevelLast = MINCLEVEL - 1;  /* lower than minimum */
     unsigned recursive = 0;
-    unsigned memLimit = 0;
+    unsigned long long memLimit = 0;
     FileNamesTable* filenames = UTIL_allocateFileNamesTable((size_t)argCount);  /* argCount >= 1 */
     FileNamesTable* file_of_names = UTIL_allocateFileNamesTable((size_t)argCount);  /* argCount >= 1 */
     const char* programName = argv[0];
@@ -1051,9 +1051,9 @@ int main(int argCount, const char* argv[])
                 }
 #endif
                 if (longCommandWArg(&argument, "--threads")) { NEXT_UINT32(nbWorkers); continue; }
-                if (longCommandWArg(&argument, "--memlimit")) { NEXT_UINT32(memLimit); continue; }
-                if (longCommandWArg(&argument, "--memory")) { NEXT_UINT32(memLimit); continue; }
-                if (longCommandWArg(&argument, "--memlimit-decompress")) { NEXT_UINT32(memLimit); continue; }
+                if (longCommandWArg(&argument, "--memlimit")) { NEXT_TSIZE(memLimit); continue; }
+                if (longCommandWArg(&argument, "--memory")) { NEXT_TSIZE(memLimit); continue; }
+                if (longCommandWArg(&argument, "--memlimit-decompress")) { NEXT_TSIZE(memLimit); continue; }
                 if (longCommandWArg(&argument, "--block-size")) { NEXT_TSIZE(blockSize); continue; }
                 if (longCommandWArg(&argument, "--maxdict")) { NEXT_UINT32(maxDictSize); continue; }
                 if (longCommandWArg(&argument, "--dictID")) { NEXT_UINT32(dictID); continue; }
@@ -1208,7 +1208,7 @@ int main(int argCount, const char* argv[])
                     /* limit memory */
                 case 'M':
                     argument++;
-                    memLimit = readU32FromChar(&argument);
+                    memLimit = readSizeTFromChar(&argument);
                     break;
                 case 'l': operation=zom_list; argument++; break;
 #ifdef UTIL_HAS_CREATEFILELIST
@@ -1538,9 +1538,9 @@ int main(int argCount, const char* argv[])
     FIO_setMMapDict(prefs, mmapDict);
     if (memLimit == 0) {
         if (compressionParams.windowLog == 0) {
-            memLimit = (U32)1 << g_defaultMaxWindowLog;
+            memLimit = (U64)1LLU << g_defaultMaxWindowLog;
         } else {
-            memLimit = (U32)1 << (compressionParams.windowLog & 31);
+            memLimit = (U64)1LLU << (compressionParams.windowLog & ZSTD_WINDOWLOG_MAX);
     }   }
     if (patchFromDictFileName != NULL)
         dictFileName = patchFromDictFileName;

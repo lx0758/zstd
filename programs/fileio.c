@@ -364,7 +364,7 @@ void FIO_setChecksumFlag(FIO_prefs_t* const prefs, int checksumFlag) { prefs->ch
 
 void FIO_setRemoveSrcFile(FIO_prefs_t* const prefs, int flag) { prefs->removeSrcFile = (flag!=0); }
 
-void FIO_setMemLimit(FIO_prefs_t* const prefs, unsigned memLimit) { prefs->memLimit = memLimit; }
+void FIO_setMemLimit(FIO_prefs_t* const prefs, unsigned long long memLimit) { prefs->memLimit = memLimit; }
 
 void FIO_setNbWorkers(FIO_prefs_t* const prefs, int nbWorkers) {
 #ifndef ZSTD_MULTITHREAD
@@ -965,13 +965,13 @@ static void FIO_adjustMemLimitForPatchFromMode(FIO_prefs_t* const prefs,
                                     unsigned long long const maxSrcFileSize)
 {
     unsigned long long maxSize = MAX(prefs->memLimit, MAX(dictSize, maxSrcFileSize));
-    unsigned const maxWindowSize = (1U << ZSTD_WINDOWLOG_MAX);
+    unsigned long long maxWindowSize = (1LLU << ZSTD_WINDOWLOG_MAX);
     if (maxSize == UTIL_FILESIZE_UNKNOWN)
         EXM_THROW(42, "Using --patch-from with stdin requires --stream-size");
     assert(maxSize != UTIL_FILESIZE_UNKNOWN);
     if (maxSize > maxWindowSize)
-        EXM_THROW(42, "Can't handle files larger than %u GB\n", maxWindowSize/(1 GB));
-    FIO_setMemLimit(prefs, (unsigned)maxSize);
+        EXM_THROW(42, "Can't handle files larger than %llu GB\n", maxWindowSize/(1 GB));
+    FIO_setMemLimit(prefs, (unsigned long long)maxSize);
 }
 
 /* FIO_multiFilesConcatWarning() :
@@ -2129,7 +2129,7 @@ void FIO_displayCompressionParameters(const FIO_prefs_t* prefs)
     if (prefs->targetCBlockSize)
         DISPLAY(" --target-compressed-block-size=%u", (unsigned) prefs->targetCBlockSize);
     DISPLAY("%s", INDEX(compressLiteralsOptions, prefs->literalCompressionMode));
-    DISPLAY(" --memory=%u", prefs->memLimit ? prefs->memLimit : 128 MB);
+    DISPLAY(" --memory=%llu", prefs->memLimit ? prefs->memLimit : 128 MB);
     DISPLAY(" --threads=%d", prefs->nbWorkers);
     DISPLAY("%s", prefs->excludeCompressedFiles ? " --exclude-compressed" : "");
     DISPLAY(" --%scontent-size", prefs->contentSize ? "" : "no-");
@@ -2413,7 +2413,7 @@ FIO_zstdErrorHelp(const FIO_prefs_t* const prefs,
         unsigned long long const windowSize = header.windowSize;
         unsigned const windowLog = FIO_highbit64(windowSize) + ((windowSize & (windowSize - 1)) != 0);
         assert(prefs->memLimit > 0);
-        DISPLAYLEVEL(1, "%s : Window size larger than maximum : %llu > %u \n",
+        DISPLAYLEVEL(1, "%s : Window size larger than maximum : %llu > %llu \n",
                         srcFileName, windowSize, prefs->memLimit);
         if (windowLog <= ZSTD_WINDOWLOG_MAX) {
             unsigned const windowMB = (unsigned)((windowSize >> 20) + ((windowSize & ((1 MB) - 1)) != 0));
