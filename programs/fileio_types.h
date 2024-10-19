@@ -61,7 +61,7 @@ typedef struct FIO_prefs_s {
     int asyncIO;
 
     /* Computation resources preferences */
-    unsigned memLimit;
+    unsigned long long memLimit;
     int nbWorkers;
 
     int excludeCompressedFiles;

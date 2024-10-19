@@ -613,7 +613,7 @@ static size_t COVER_ctx_init(COVER_ctx_t *ctx, const void *samplesBuffer,
   /* Checks */
   if (totalSamplesSize < MAX(d, sizeof(U64)) ||
       totalSamplesSize >= (size_t)COVER_MAX_SAMPLES_SIZE) {
-    DISPLAYLEVEL(1, "Total samples size is too large (%u MB), maximum size is %u MB\n",
+    DISPLAYLEVEL(1, "Total samples size is too large (%u MB), maximum size is %llu MB\n",
                  (unsigned)(totalSamplesSize>>20), (COVER_MAX_SAMPLES_SIZE >> 20));
     return ERROR(srcSize_wrong);
   }

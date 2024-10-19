@@ -623,7 +623,7 @@ ZSTD_insertBtAndGetAllMatches (
     U32 matchEndIdx = curr+8+1;   /* farthest referenced position of any match => detects repetitive patterns */
     U32 dummy32;   /* to be nullified at the end */
     U32 mnum = 0;
-    U32 nbCompares = 1U << cParams->searchLog;
+    U64 nbCompares = 1U << cParams->searchLog;
 
     const ZSTD_matchState_t* dms    = dictMode == ZSTD_dictMatchState ? ms->dictMatchState : NULL;
     const ZSTD_compressionParameters* const dmsCParams =
@@ -773,7 +773,7 @@ ZSTD_insertBtAndGetAllMatches (
 
     *smallerPtr = *largerPtr = 0;
 
-    assert(nbCompares <= (1U << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
+    assert(nbCompares <= (1L << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
     if (dictMode == ZSTD_dictMatchState && nbCompares) {
         size_t const dmsH = ZSTD_hashPtr(ip, dmsHashLog, mls);
         U32 dictMatchIndex = dms->hashTable[dmsH];

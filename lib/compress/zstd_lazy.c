@@ -264,8 +264,8 @@ size_t ZSTD_DUBT_findBestMatch(ZSTD_matchState_t* ms,
 
     U32*         nextCandidate = bt + 2*(matchIndex&btMask);
     U32*         unsortedMark = bt + 2*(matchIndex&btMask) + 1;
-    U32          nbCompares = 1U << cParams->searchLog;
-    U32          nbCandidates = nbCompares;
+    U64          nbCompares = 1U << cParams->searchLog;
+    U64          nbCandidates = nbCompares;
     U32          previousCandidate = 0;
 
     DEBUGLOG(7, "ZSTD_DUBT_findBestMatch (%u) ", curr);
@@ -369,7 +369,7 @@ size_t ZSTD_DUBT_findBestMatch(ZSTD_matchState_t* ms,
 
         *smallerPtr = *largerPtr = 0;
 
-        assert(nbCompares <= (1U << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
+        assert(nbCompares <= (1L << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
         if (dictMode == ZSTD_dictMatchState && nbCompares) {
             bestLength = ZSTD_DUBT_findBetterDictMatch(
                     ms, ip, iend,
@@ -686,7 +686,7 @@ size_t ZSTD_HcFindBestMatch(
     const U32 isDictionary = (ms->loadedDictEnd != 0);
     const U32 lowLimit = isDictionary ? lowestValid : withinMaxDistance;
     const U32 minChain = curr > chainSize ? curr - chainSize : 0;
-    U32 nbAttempts = 1U << cParams->searchLog;
+    U64 nbAttempts = 1U << cParams->searchLog;
     size_t ml=4-1;
 
     const ZSTD_matchState_t* const dms = ms->dictMatchState;
@@ -731,7 +731,7 @@ size_t ZSTD_HcFindBestMatch(
         matchIndex = NEXT_IN_CHAIN(matchIndex, chainMask);
     }
 
-    assert(nbAttempts <= (1U << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
+    assert(nbAttempts <= (1L << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
     if (dictMode == ZSTD_dedicatedDictSearch) {
         ml = ZSTD_dedicatedDictSearch_lazy_search(offsetPtr, ml, nbAttempts, dms,
                                                   ip, iLimit, prefixStart, curr, dictLimit, ddsIdx);
@@ -1166,7 +1166,7 @@ size_t ZSTD_RowFindBestMatch(
     const U32 cappedSearchLog = MIN(cParams->searchLog, rowLog); /* nb of searches is capped at nb entries per row */
     const U32 groupWidth = ZSTD_row_matchMaskGroupWidth(rowEntries);
     const U64 hashSalt = ms->hashSalt;
-    U32 nbAttempts = 1U << cappedSearchLog;
+    U64 nbAttempts = 1U << cappedSearchLog;
     size_t ml=4-1;
     U32 hash;
 
@@ -1279,7 +1279,7 @@ size_t ZSTD_RowFindBestMatch(
         }
     }
 
-    assert(nbAttempts <= (1U << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
+    assert(nbAttempts <= (1L << ZSTD_SEARCHLOG_MAX)); /* Check we haven't underflowed. */
     if (dictMode == ZSTD_dedicatedDictSearch) {
         ml = ZSTD_dedicatedDictSearch_lazy_search(offsetPtr, ml, nbAttempts + ddsExtraAttempts, dms,
                                                   ip, iLimit, prefixStart, curr, dictLimit, ddsIdx);

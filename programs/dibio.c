@@ -312,7 +312,7 @@ static fileStats DiB_fileStats(const char** fileNamesTable, int nbFiles, size_t 
 int DiB_trainFromFiles(const char* dictFileName, size_t maxDictSize,
                        const char** fileNamesTable, int nbFiles, size_t chunkSize,
                        ZDICT_legacy_params_t* params, ZDICT_cover_params_t* coverParams,
-                       ZDICT_fastCover_params_t* fastCoverParams, int optimize, unsigned memLimit)
+                       ZDICT_fastCover_params_t* fastCoverParams, int optimize, unsigned long long memLimit)
 {
     fileStats fs;
     size_t* sampleSizes; /* vector of sample sizes. Each sample can be up to SAMPLESIZE_MAX */
@@ -345,8 +345,8 @@ int DiB_trainFromFiles(const char* dictFileName, size_t maxDictSize,
         /* TODO: there is opportunity to stop DiB_fileStats() early when the data limit is reached */
         loadedSize = (size_t)MIN( MIN((S64)maxMem, fs.totalSizeToLoad), MAX_SAMPLES_SIZE );
         if (memLimit != 0) {
-            DISPLAYLEVEL(2, "!  Warning : setting manual memory limit for dictionary training data at %u MB \n",
-                (unsigned)(memLimit / (1 MB)));
+            DISPLAYLEVEL(2, "!  Warning : setting manual memory limit for dictionary training data at %llu MB \n",
+                (unsigned long long)(memLimit / (1 MB)));
             loadedSize = (size_t)MIN(loadedSize, memLimit);
         }
         srcBuffer = malloc(loadedSize+NOISELENGTH);

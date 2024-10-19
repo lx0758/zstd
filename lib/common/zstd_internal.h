@@ -70,7 +70,7 @@ static UNUSED_ATTR const U32 repStartValue[ZSTD_REP_NUM] = { 1, 4, 8 };
 
 #define KB *(1 <<10)
 #define MB *(1 <<20)
-#define GB *(1U<<30)
+#define GB *(1LLU<<30)
 
 #define BIT7 128
 #define BIT6  64

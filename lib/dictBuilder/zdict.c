@@ -61,7 +61,7 @@
 ***************************************/
 #define KB *(1 <<10)
 #define MB *(1 <<20)
-#define GB *(1U<<30)
+#define GB *(1LLU<<30)
 
 #define DICTLISTSIZE_DEFAULT 10000
 

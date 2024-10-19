@@ -113,7 +113,7 @@ ZSTDLIBv07_API size_t ZSTDv07_decompress_usingDDict(ZSTDv07_DCtx* dctx,
 
 typedef struct {
     unsigned long long frameContentSize;
-    unsigned windowSize;
+    unsigned long long windowSize;
     unsigned dictID;
     unsigned checksumFlag;
 } ZSTDv07_frameParams;

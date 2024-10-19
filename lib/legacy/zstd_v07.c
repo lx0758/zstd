@@ -3118,8 +3118,8 @@ size_t ZSTDv07_getFrameParams(ZSTDv07_frameParams* fparamsPtr, const void* src, 
         U32 const checksumFlag = (fhdByte>>2)&1;
         U32 const directMode = (fhdByte>>5)&1;
         U32 const fcsID = fhdByte>>6;
-        U32 const windowSizeMax = 1U << ZSTDv07_WINDOWLOG_MAX;
-        U32 windowSize = 0;
+        U64 const windowSizeMax = 1L << ZSTDv07_WINDOWLOG_MAX;
+        U64 windowSize = 0;
         U32 dictID = 0;
         U64 frameContentSize = 0;
         if ((fhdByte & 0x08) != 0)   /* reserved bits, which must be zero */
@@ -4385,7 +4385,7 @@ size_t ZBUFFv07_decompressContinue(ZBUFFv07_DCtx* zbd,
                     if (ZSTDv07_isError(h2Result)) return h2Result;
             }   }
 
-            zbd->fParams.windowSize = MAX(zbd->fParams.windowSize, 1U << ZSTDv07_WINDOWLOG_ABSOLUTEMIN);
+            zbd->fParams.windowSize = MAX(zbd->fParams.windowSize, 1L << ZSTDv07_WINDOWLOG_ABSOLUTEMIN);
 
             /* Frame header instruct buffer sizes */
             {   size_t const blockSize = MIN(zbd->fParams.windowSize, ZSTDv07_BLOCKSIZE_ABSOLUTEMAX);
